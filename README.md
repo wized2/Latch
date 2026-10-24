@@ -19,7 +19,8 @@
 
 <p align="center">
   <a href="https://wized2.github.io/Latch/"><b>Website</b></a> ·
-  <a href="https://github.com/wized2/Latch/releases/latest"><b>Download APK</b></a>
+  <a href="https://github.com/wized2/Latch/releases/latest"><b>Download APK</b></a> ·
+  <a href="README.es.md"><b>Español</b></a>
 </p>
 
 ## Screenshots
