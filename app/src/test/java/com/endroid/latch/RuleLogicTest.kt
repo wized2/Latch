@@ -92,4 +92,20 @@ class RuleLogicTest {
     @Test fun dayBitsSaturday() {
         assertTrue(RuleLogic.dayBitSet(0b1111111, Calendar.SATURDAY))
     }
+
+    @Test fun cooldownAllowsWhenDisabled() {
+        assertTrue(RuleLogic.cooldownOk(0, 1000L, 1000L))
+        assertTrue(RuleLogic.cooldownOk(-5, 1000L, 1000L))
+    }
+
+    @Test fun cooldownBlocksInsideWindow() {
+        assertFalse(RuleLogic.cooldownOk(60, 0L, 59_000L))
+        assertTrue(RuleLogic.cooldownOk(60, 0L, 60_000L))
+        assertTrue(RuleLogic.cooldownOk(60, 0L, 61_000L))
+    }
+
+    @Test fun cooldownEdgeExactlyOnBoundary() {
+        assertFalse(RuleLogic.cooldownOk(1, 1000L, 1999L))
+        assertTrue(RuleLogic.cooldownOk(1, 1000L, 2000L))
+    }
 }

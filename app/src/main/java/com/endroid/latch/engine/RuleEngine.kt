@@ -49,7 +49,7 @@ object RuleEngine {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val last = prefs.getLong("cd_${rule.id}", 0L)
         val now = System.currentTimeMillis()
-        if (now - last < rule.cooldownSec * 1000L) return false
+        if (!RuleLogic.cooldownOk(rule.cooldownSec, last, now)) return false
         prefs.edit().putLong("cd_${rule.id}", now).apply()
         return true
     }

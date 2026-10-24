@@ -8,6 +8,15 @@ object RuleLogic {
     fun batteryAbove(percent: Int, threshold: Int): Boolean = percent >= threshold
 
     /**
+     * True when [cooldownSec] has elapsed since [lastFiredMs] at [nowMs].
+     * A non-positive cooldown always allows firing.
+     */
+    fun cooldownOk(cooldownSec: Int, lastFiredMs: Long, nowMs: Long): Boolean {
+        if (cooldownSec <= 0) return true
+        return nowMs - lastFiredMs >= cooldownSec * 1000L
+    }
+
+    /**
      * Fire when force, first time condition is true (!latched), or threshold was crossed
      * since [prevPercent] (-1 = unknown).
      */
