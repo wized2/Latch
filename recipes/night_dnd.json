@@ -15,7 +15,7 @@
       "tag": "recipe",
       "profileId": "default",
       "actions": [
-        {"type": "SET_RINGER", "text": "", "title": "", "ringerMode": "SILENT", "param": ""}
+        {"type": "RINGER_MODE", "text": "", "title": "", "ringerMode": "SILENT", "param": ""}
       ]
     }
   ]
