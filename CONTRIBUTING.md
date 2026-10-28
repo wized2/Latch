@@ -43,3 +43,9 @@ See [docs/GROWTH.md](docs/GROWTH.md) — no fake stars, no trackers, honest list
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Finding work
+
+- [Good first issues](https://github.com/wized2/Latch/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+- [Help wanted](https://github.com/wized2/Latch/issues?q=is%3Aissue+is%3Aopen+label%3A%22help+wanted%22)
+- Feature work → **beta**; keep **main** stable.
