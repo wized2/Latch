@@ -610,6 +610,7 @@ private fun SettingsScreen(
         when (id) {
             "notif" -> if (Build.VERSION.SDK_INT >= 33) notifPerm.launch(Manifest.permission.POST_NOTIFICATIONS)
             "usage" -> context.startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
+            "accessibility" -> context.startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
             "write_settings" -> if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 context.startActivity(
                     Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS).apply {

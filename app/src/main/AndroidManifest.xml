@@ -102,7 +102,20 @@
             android:foregroundServiceType="specialUse">
             <property
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="Monitor foreground app for user-defined automation rules" />
+                android:value="Fallback UsageStats polling for APP_OPENED when Accessibility is off" />
+        </service>
+
+        <service
+            android:name=".engine.LatchAccessibilityService"
+            android:exported="false"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:label="@string/accessibility_service_label">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/latch_accessibility" />
         </service>
 
         <provider

@@ -1,3 +1,4 @@
+/** Exact daily windows via AlarmManager.setExactAndAllowWhileIdle (SCHEDULE_EXACT_ALARM). */
 package com.endroid.latch.engine
 
 import android.app.AlarmManager

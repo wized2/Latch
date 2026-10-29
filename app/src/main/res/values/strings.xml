@@ -13,4 +13,6 @@
     <string name="monitor_text">Watching battery, network, and other triggers</string>
     <string name="monitor_channel">Latch monitor</string>
     <string name="monitor_channel_desc">Keeps automation running in the background</string>
+    <string name="accessibility_service_description">Latch uses Accessibility only to detect when an app comes to the foreground for APP_OPENED rules. No screen content is read or stored.</string>
+    <string name="accessibility_service_label">Latch app triggers</string>
 </resources>

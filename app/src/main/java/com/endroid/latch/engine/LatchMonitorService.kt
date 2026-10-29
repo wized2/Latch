@@ -29,8 +29,13 @@ import com.endroid.latch.receiver.SystemEventReceiver
 import com.endroid.latch.receiver.TimeTickReceiver
 
 /**
- * Sticky foreground service that holds automation receivers.
- * A periodic watchdog alarm restarts this service if the OS kills it.
+ * Sticky "monitor" foreground service — host for dynamic BroadcastReceivers.
+ *
+ * Modern Android drops most implicit manifest receivers; registering here while
+ * startForeground(specialUse) is active keeps Wi‑Fi, power, screen, and package
+ * events flowing offline without WorkManager polling.
+ *
+ * A watchdog exact alarm restarts this service if the OS kills it.
  */
 class LatchMonitorService : Service() {
     private val power = PowerReceiver()
@@ -174,7 +179,7 @@ class LatchMonitorService : Service() {
     companion object {
         const val MONITOR_CHANNEL = "latch_monitor"
         const val NOTIF_ID = 41
-        private const val WATCHDOG_MS = 15 * 60 * 1000L
+        private const val WATCHDOG_MS = 10 * 60 * 1000L
 
         fun refresh(context: Context) {
             val needs = RuleStore(context).load().any { it.enabled }

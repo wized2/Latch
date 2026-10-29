@@ -108,6 +108,10 @@ object Elevated {
         return p.exitValue() to out.toString().take(4000)
     }
 
+    /**
+     * Elevated shell: open Shizuku process only for this command, then drain/exit.
+     * Do not keep a long-lived Shizuku user service bound from the monitor.
+     */
     fun runShell(cmd: String, preferShizuku: Boolean, allowSu: Boolean): Pair<Int, String> {
         if (preferShizuku && shizukuPermissionGranted()) {
             for (argv in listOf(

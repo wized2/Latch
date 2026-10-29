@@ -29,6 +29,13 @@
 |:---:|:---:|:---:|:---:|
 | <img src="docs/screenshots/01_home.png" width="160" alt="Home"/> | <img src="docs/screenshots/02_settings.png" width="160" alt="Settings"/> | <img src="docs/screenshots/03_settings_scrolled.png" width="160" alt="Settings more"/> | <img src="docs/screenshots/04_edit_rule.png" width="160" alt="Edit rule"/> |
 
+## Engine (always-on)
+
+- **Sticky foreground monitor** (`specialUse`) hosts **dynamic** receivers (Wi‑Fi, power, screen, …)
+- **Accessibility** for instant **App opened** rules (Usage access is fallback only)
+- **Exact alarms** for daily time windows
+- **Shizuku/root** for elevated actions — bound only while a command runs
+
 ## Features
 
 ### Triggers

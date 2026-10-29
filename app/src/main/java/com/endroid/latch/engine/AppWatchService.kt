@@ -16,7 +16,8 @@ import com.endroid.latch.data.RuleStore
 import com.endroid.latch.data.TriggerType
 
 /**
- * Lightweight foreground poller for APP_OPENED triggers when usage access is granted.
+ * Fallback APP_OPENED poller using UsageStats when Accessibility is not enabled.
+ * Prefer [LatchAccessibilityService] for instant, low-drain triggers.
  */
 class AppWatchService : Service() {
     private val handler = Handler(Looper.getMainLooper())
@@ -25,13 +26,18 @@ class AppWatchService : Service() {
     private val tick = object : Runnable {
         override fun run() {
             poll()
-            handler.postDelayed(this, 3000L)
+            handler.postDelayed(this, 2500L)
         }
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        // Accessibility covers APP_OPENED — stop polling
+        if (LatchAccessibilityService.isEnabled(this)) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
         RuleEngine.ensureChannel(this)
         val notif: Notification = NotificationCompat.Builder(this, RuleEngine.CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_stat_latch)
@@ -56,6 +62,10 @@ class AppWatchService : Service() {
     }
 
     private fun poll() {
+        if (LatchAccessibilityService.isEnabled(this)) {
+            stopSelf()
+            return
+        }
         val needs = RuleStore(this).load().any {
             it.enabled && it.trigger == TriggerType.APP_OPENED && it.triggerParam.isNotBlank()
         }
@@ -89,13 +99,16 @@ class AppWatchService : Service() {
                 it.enabled && it.trigger == TriggerType.APP_OPENED
             }
             val i = Intent(context, AppWatchService::class.java)
-            if (needs) {
+            // Prefer Accessibility — only poll if needed and a11y off
+            if (needs && !LatchAccessibilityService.isEnabled(context)) {
                 try {
                     if (Build.VERSION.SDK_INT >= 26) context.startForegroundService(i)
                     else context.startService(i)
                 } catch (_: Exception) { }
             } else {
-                context.stopService(i)
+                try {
+                    context.stopService(i)
+                } catch (_: Exception) { }
             }
         }
     }
