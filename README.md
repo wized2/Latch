@@ -29,6 +29,13 @@
 |:---:|:---:|:---:|:---:|
 | <img src="docs/screenshots/01_home.png" width="160" alt="Home"/> | <img src="docs/screenshots/02_settings.png" width="160" alt="Settings"/> | <img src="docs/screenshots/03_settings_scrolled.png" width="160" alt="Settings more"/> | <img src="docs/screenshots/04_edit_rule.png" width="160" alt="Edit rule"/> |
 
+## Engine (always-on)
+
+- **Sticky foreground monitor** (`specialUse`) hosts **dynamic** receivers (Wi‑Fi, power, screen, …)
+- **Accessibility** for instant **App opened** rules (Usage access is fallback only)
+- **Exact alarms** for daily time windows
+- **Shizuku/root** for elevated actions — bound only while a command runs
+
 ## Features
 
 ### Triggers
@@ -112,6 +119,12 @@ Import JSON from [`recipes/`](recipes/) (work Wi‑Fi silent, headphones → mus
 Tasker-class power without cloud accounts or trackers. Rules are plain local data; optional elevation is explicit.
 
 
+## Example recipes
+
+See [docs/RECIPES.md](docs/RECIPES.md) and JSON under `recipes/`.
+
+OEM battery tips: [docs/OEM_BATTERY.md](docs/OEM_BATTERY.md).
+
 ## Contributing
 
 Growth norms (no fake stars / spam): [docs/GROWTH.md](docs/GROWTH.md).
@@ -122,6 +135,12 @@ Growth norms (no fake stars / spam): [docs/GROWTH.md](docs/GROWTH.md).
 3. Grab a [good first issue](https://github.com/wized2/Latch/labels/good%20first%20issue).
 
 Spanish overview: [README.es.md](README.es.md).
+
+## Example recipes
+
+See [docs/RECIPES.md](docs/RECIPES.md) and JSON under `recipes/`.
+
+OEM battery tips: [docs/OEM_BATTERY.md](docs/OEM_BATTERY.md).
 
 ## Contributing detail
 
@@ -134,3 +153,17 @@ MIT · Project Endroid
 ---
 
 <p align="center">If Latch helps you automate privately, a <b>star</b> helps others find it ⭐</p>
+
+## Contribute / contributor hunt
+
+First-time contributors welcome:
+
+| Start here | Link |
+| --- | --- |
+| Good first issues | https://github.com/wized2/Latch/labels/good%20first%20issue |
+| Contributor hunt | https://github.com/wized2/Latch/labels/contributor-hunt |
+| Help wanted | https://github.com/wized2/Latch/labels/help%20wanted |
+| Recipes guide | [docs/RECIPES.md](docs/RECIPES.md) |
+| Guide | [CONTRIBUTING.md](CONTRIBUTING.md) |
+
+Easy first PRs: recipe JSON, accessibility labels, empty-state copy, docs.

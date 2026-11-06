@@ -22,6 +22,7 @@ object PermissionStatus {
     fun all(context: Context): List<PermRow> {
         val rows = mutableListOf<PermRow>()
         rows += notif(context)
+        rows += accessibility(context)
         rows += usage(context)
         rows += writeSettings(context)
         rows += exactAlarm(context)
@@ -46,7 +47,7 @@ object PermissionStatus {
             AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(), context.packageName,
         )
         val ok = mode == AppOpsManager.MODE_ALLOWED
-        return PermRow("usage", "Usage access", "App-opened triggers", ok, if (ok) "Enabled" else "Enable")
+        return PermRow("usage", "Usage access", "Fallback app-opened if Accessibility is off", ok, if (ok) "Enabled" else "Enable")
     }
 
     private fun writeSettings(context: Context): PermRow {
@@ -77,6 +78,17 @@ object PermissionStatus {
             PackageManager.PERMISSION_GRANTED
         val ok = fine || coarse
         return PermRow("location", "Location", "Required on many devices to read Wi‑Fi SSID", ok, if (ok) "Enabled" else "Enable")
+    }
+
+    private fun accessibility(context: Context): PermRow {
+        val ok = LatchAccessibilityService.isEnabled(context)
+        return PermRow(
+            "accessibility",
+            "Accessibility (app open)",
+            if (ok) "Instant APP_OPENED triggers" else "Recommended for App opened rules",
+            ok,
+            if (ok) "Enabled" else "Enable",
+        )
     }
 
     private fun shizuku(context: Context): PermRow {

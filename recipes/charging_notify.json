@@ -4,7 +4,7 @@
       "id": "recipe-charging-notify",
       "name": "Notify when charging",
       "enabled": true,
-      "trigger": "POWER_CONNECTED",
+      "trigger": "CHARGER_CONNECTED",
       "triggerValue": 0,
       "triggerValue2": 0,
       "triggerParam": "",

@@ -1,45 +1,36 @@
 # Contributing to Latch
 
-Privacy-first Tasker-style automation for Android — **local rules, no cloud, no trackers**.
+Latch is **local-first automation** — no accounts, no cloud, no trackers. Keep contributions aligned with that.
 
-**Start here:** [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)
+## Fast path (first PR)
 
-## TL;DR
+1. Open **[good first issues](https://github.com/wized2/Latch/labels/good%20first%20issue)** or **[contributor-hunt](https://github.com/wized2/Latch/labels/contributor-hunt)**
+2. Comment that you want the issue
+3. Branch from **`beta`** when possible
+4. Open a draft PR early
 
 ```bash
-git clone https://github.com/wized2/Latch.git
-cd Latch && git checkout beta
-./gradlew testStableDebugUnitTest
-# PR against **beta**
+git clone https://github.com/<you>/Latch.git
+cd Latch
+./gradlew assembleDebug
+./gradlew test
 ```
 
-| Do | Don’t |
-|----|--------|
-| Target **`beta`** | Open routine PRs to `main` |
-| Keep offline (no trackers) | Add analytics / ads |
-| Unit-test `RuleLogic` helpers | Commit keystores |
-| Use recipe JSON in `/recipes` when sharing packs | Break existing rule schema without migration notes |
+## Easy wins
 
-## Good first issues
+| Task | Where |
+| --- | --- |
+| New recipe JSON | `recipes/` + line in `docs/RECIPES.md` |
+| TalkBack labels | `LatchApp.kt` Settings / list |
+| Empty state copy | Rules list when count == 0 |
+| OEM battery tip | `docs/OEM_BATTERY.md` |
 
-https://github.com/wized2/Latch/labels/good%20first%20issue
+## Rules
 
-Comment on an issue when you start work.
+- Valid `TriggerType` / `ActionType` names only (`Models.kt`)
+- No network permissions for core automation
+- Prefer small PRs over large refactors
 
-## Docs
+## Mentoring
 
-| Doc | |
-|-----|--|
-| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Setup & file map |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | How the engine fits |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community |
-| [SECURITY.md](SECURITY.md) | Vulnerabilities |
-| [recipes/README.md](recipes/README.md) | Importable rule packs |
-
-## Growth & community
-
-See [docs/GROWTH.md](docs/GROWTH.md) — no fake stars, no trackers, honest listings only.
-
-## License
-
-MIT — see [LICENSE](LICENSE).
+Comment on the issue with build errors or questions. `good first issue` PRs are reviewed first.
