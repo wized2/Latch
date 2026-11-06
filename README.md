@@ -119,6 +119,12 @@ Import JSON from [`recipes/`](recipes/) (work Wi‑Fi silent, headphones → mus
 Tasker-class power without cloud accounts or trackers. Rules are plain local data; optional elevation is explicit.
 
 
+## Example recipes
+
+See [docs/RECIPES.md](docs/RECIPES.md) and JSON under `recipes/`.
+
+OEM battery tips: [docs/OEM_BATTERY.md](docs/OEM_BATTERY.md).
+
 ## Contributing
 
 Growth norms (no fake stars / spam): [docs/GROWTH.md](docs/GROWTH.md).
@@ -129,6 +135,12 @@ Growth norms (no fake stars / spam): [docs/GROWTH.md](docs/GROWTH.md).
 3. Grab a [good first issue](https://github.com/wized2/Latch/labels/good%20first%20issue).
 
 Spanish overview: [README.es.md](README.es.md).
+
+## Example recipes
+
+See [docs/RECIPES.md](docs/RECIPES.md) and JSON under `recipes/`.
+
+OEM battery tips: [docs/OEM_BATTERY.md](docs/OEM_BATTERY.md).
 
 ## Contributing detail
 
@@ -141,3 +153,4 @@ MIT · Project Endroid
 ---
 
 <p align="center">If Latch helps you automate privately, a <b>star</b> helps others find it ⭐</p>
+

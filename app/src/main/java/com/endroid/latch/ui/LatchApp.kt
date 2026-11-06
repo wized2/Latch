@@ -61,6 +61,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -99,6 +101,7 @@ fun LatchApp(onThemeChanged: () -> Unit = {}) {
     var ruleQuery by remember { mutableStateOf("") }
     var screen by remember { mutableStateOf<Screen>(Screen.List) }
     var dialogText by remember { mutableStateOf<String?>(null) }
+    var pendingDelete by remember { mutableStateOf<Rule?>(null) }
     var dialogTitle by remember { mutableStateOf("") }
 
     fun reload() {
@@ -222,7 +225,7 @@ fun LatchApp(onThemeChanged: () -> Unit = {}) {
                                     rule = rule,
                                     onToggle = { store.setEnabled(rule.id, it); reload() },
                                     onClick = { screen = Screen.Edit(rule) },
-                                    onDelete = { store.delete(rule.id); reload() },
+                                    onDelete = { pendingDelete = rule },
                                     onRun = { RuleEngine.run(context, rule) },
                                 )
                             }
@@ -241,6 +244,29 @@ fun LatchApp(onThemeChanged: () -> Unit = {}) {
             onShowText = { title, text -> dialogTitle = title; dialogText = text },
             onImported = { reload() },
             onThemeChanged = onThemeChanged,
+        )
+    }
+
+    
+    pendingDelete?.let { rule ->
+        AlertDialog(
+            onDismissRequest = { pendingDelete = null },
+            title = { Text("Delete rule?") },
+            text = {
+                Text("Delete “${rule.name}”? This cannot be undone.")
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        store.delete(rule.id)
+                        pendingDelete = null
+                        reload()
+                    },
+                ) { Text("Delete") }
+            },
+            dismissButton = {
+                TextButton(onClick = { pendingDelete = null }) { Text("Cancel") }
+            },
         )
     }
 
@@ -291,7 +317,13 @@ private fun RuleCard(
             IconButton(onClick = onDelete) {
                 Icon(Icons.Default.Delete, contentDescription = "Delete")
             }
-            Switch(checked = rule.enabled, onCheckedChange = onToggle)
+            Switch(
+                checked = rule.enabled,
+                onCheckedChange = onToggle,
+                modifier = Modifier.semantics {
+                    contentDescription = if (rule.enabled) "Disable rule ${rule.name}" else "Enable rule ${rule.name}"
+                },
+            )
         }
     }
 }
