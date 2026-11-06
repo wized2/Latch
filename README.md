@@ -154,3 +154,16 @@ MIT · Project Endroid
 
 <p align="center">If Latch helps you automate privately, a <b>star</b> helps others find it ⭐</p>
 
+## Contribute / contributor hunt
+
+First-time contributors welcome:
+
+| Start here | Link |
+| --- | --- |
+| Good first issues | https://github.com/wized2/Latch/labels/good%20first%20issue |
+| Contributor hunt | https://github.com/wized2/Latch/labels/contributor-hunt |
+| Help wanted | https://github.com/wized2/Latch/labels/help%20wanted |
+| Recipes guide | [docs/RECIPES.md](docs/RECIPES.md) |
+| Guide | [CONTRIBUTING.md](CONTRIBUTING.md) |
+
+Easy first PRs: recipe JSON, accessibility labels, empty-state copy, docs.
