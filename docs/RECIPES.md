@@ -26,3 +26,9 @@ Import JSON from the `recipes/` folder in **Settings → Import**, or copy a fil
 ## Tips
 - Triggers and actions must match names in `TriggerType` / `ActionType` (`Models.kt`).
 - Use `RINGER_MODE` (not `SET_RINGER`) and `CHARGER_CONNECTED` (not `POWER_CONNECTED`).
+
+## Bluetooth
+
+| Recipe | Trigger | Actions |
+| --- | --- | --- |
+| `bluetooth_connected_toast.json` | `BLUETOOTH_CONNECTED` | Toast |

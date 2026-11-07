@@ -1,0 +1,22 @@
+{
+  "rules": [
+    {
+      "id": "recipe-bt-connected-toast",
+      "name": "Bluetooth connected toast",
+      "enabled": true,
+      "trigger": "BLUETOOTH_CONNECTED",
+      "triggerValue": 0,
+      "triggerValue2": 0,
+      "triggerParam": "",
+      "condition": "NONE",
+      "conditionValue": 0,
+      "cooldownSec": 15,
+      "notes": "Recipe: toast when any Bluetooth device connects",
+      "tag": "recipe",
+      "profileId": "default",
+      "actions": [
+        {"type": "TOAST", "text": "Bluetooth connected", "title": "", "ringerMode": "NORMAL", "param": ""}
+      ]
+    }
+  ]
+}

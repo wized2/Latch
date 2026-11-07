@@ -145,11 +145,15 @@ fun LatchApp(onThemeChanged: () -> Unit = {}) {
                     Text("No rules yet", style = MaterialTheme.typography.titleMedium)
                     Spacer(Modifier.height(8.dp))
                     Text(
-                        "Local if → then automation with conditions, multi-actions, Shizuku/root, and plugins.",
+                        "Create a rule or import a recipe. Automation stays on-device — no account, no cloud.",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Spacer(Modifier.height(16.dp))
                     Button(onClick = { screen = Screen.Edit(null) }) { Text("Create rule") }
+                    Spacer(Modifier.height(8.dp))
+                    TextButton(onClick = { screen = Screen.Settings }) {
+                        Text("Import recipe (Settings)")
+                    }
                     Spacer(Modifier.height(20.dp))
                     Text("Quick templates", style = MaterialTheme.typography.labelLarge)
                     Spacer(Modifier.height(8.dp))
@@ -210,11 +214,15 @@ fun LatchApp(onThemeChanged: () -> Unit = {}) {
                         placeholder = { Text("Name or trigger") },
                     )
                     if (visible.isEmpty()) {
-                        Text(
-                            "No rules match “$q”",
-                            modifier = Modifier.padding(24.dp),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        )
+                        Column(Modifier.padding(24.dp)) {
+                            Text(
+                                if (q.isBlank()) "No rules in this filter" else "No rules match “$q”",
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            )
+                            if (q.isNotBlank()) {
+                                TextButton(onClick = { ruleQuery = "" }) { Text("Clear search") }
+                            }
+                        }
                     } else {
                         LazyColumn(
                             contentPadding = PaddingValues(16.dp, 4.dp, 16.dp, 88.dp),
@@ -227,6 +235,7 @@ fun LatchApp(onThemeChanged: () -> Unit = {}) {
                                     onClick = { screen = Screen.Edit(rule) },
                                     onDelete = { pendingDelete = rule },
                                     onRun = { RuleEngine.run(context, rule) },
+                                    onDuplicate = { store.duplicate(rule.id); reload() },
                                 )
                             }
                         }
@@ -292,6 +301,7 @@ private fun RuleCard(
     onClick: () -> Unit,
     onDelete: () -> Unit,
     onRun: () -> Unit,
+    onDuplicate: () -> Unit = {},
 ) {
     Card(
         onClick = onClick,
@@ -313,6 +323,9 @@ private fun RuleCard(
             }
             IconButton(onClick = onRun) {
                 Icon(Icons.Default.PlayArrow, contentDescription = "Run now")
+            }
+            IconButton(onClick = onDuplicate) {
+                Icon(Icons.Default.Add, contentDescription = "Duplicate rule")
             }
             IconButton(onClick = onDelete) {
                 Icon(Icons.Default.Delete, contentDescription = "Delete")
@@ -753,7 +766,7 @@ private fun SettingsScreen(
                     Text("Pure black in dark theme", style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                Switch(checked = amoledDark, onCheckedChange = {
+                Switch(checked = amoledDark, modifier = Modifier.semantics { contentDescription = "AMOLED dark theme" }, onCheckedChange = {
                     amoledDark = it
                     settings.amoledDark = it
                     onThemeChanged()
@@ -769,7 +782,7 @@ private fun SettingsScreen(
                     Text("Vibrate briefly when a rule runs", style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
                 }
-                Switch(checked = hapticOnFire, onCheckedChange = {
+                Switch(checked = hapticOnFire, modifier = Modifier.semantics { contentDescription = "Haptic on rule fire" }, onCheckedChange = {
                     hapticOnFire = it
                     settings.hapticOnFire = it
                 })
@@ -939,12 +952,18 @@ private fun SettingsScreen(
 @Composable
 private fun SettingSwitch(title: String, subtitle: String, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Column(Modifier.weight(1f)) {
+        Column(modifier.weight(1f)) {
             Text(title)
             Text(subtitle, style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
-        Switch(checked = checked, onCheckedChange = onChange)
+        Switch(
+            checked = checked,
+            onCheckedChange = onChange,
+            modifier = Modifier.semantics {
+                contentDescription = if (checked) "Disable $title" else "Enable $title"
+            },
+        )
     }
 }
 
