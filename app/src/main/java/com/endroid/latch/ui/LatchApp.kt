@@ -952,7 +952,7 @@ private fun SettingsScreen(
 @Composable
 private fun SettingSwitch(title: String, subtitle: String, checked: Boolean, onChange: (Boolean) -> Unit) {
     Row(verticalAlignment = Alignment.CenterVertically) {
-        Column(modifier.weight(1f)) {
+        Column(Modifier.weight(1f)) {
             Text(title)
             Text(subtitle, style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
