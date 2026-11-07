@@ -43,6 +43,19 @@ class RuleStore(private val context: Context) {
     fun setEnabled(id: String, enabled: Boolean) =
         save(load().map { if (it.id == id) it.copy(enabled = enabled) else it })
 
+    /** Clone a rule with a new id and " (copy)" suffix; disabled by default. */
+    fun duplicate(id: String): Rule? {
+        val src = load().firstOrNull { it.id == id } ?: return null
+        val copy = src.copy(
+            id = java.util.UUID.randomUUID().toString(),
+            name = src.name + " (copy)",
+            enabled = false,
+            lastFiredMs = 0L,
+        )
+        upsert(copy)
+        return copy
+    }
+
     fun exportJson(): String {
         val arr = JSONArray()
         load().forEach { arr.put(it.toJson()) }

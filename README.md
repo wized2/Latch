@@ -154,6 +154,17 @@ MIT · Project Endroid
 
 <p align="center">If Latch helps you automate privately, a <b>star</b> helps others find it ⭐</p>
 
+
+## First contribution in 15 minutes
+
+1. Fork and clone
+2. `./gradlew assembleDebug` or open in Android Studio
+3. Create a TIME_DAILY toast rule or import `recipes/*.json`
+4. Pick a [good first issue](https://github.com/wized2/Latch/labels/good%20first%20issue)
+5. PR against **`beta`** when possible
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) and [docs/RECIPES.md](docs/RECIPES.md).
+
 ## Contribute / contributor hunt
 
 First-time contributors welcome:
