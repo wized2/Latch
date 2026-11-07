@@ -2,6 +2,6 @@
 
 | Screenshot | Caption |
 | --- | --- |
-| Home | View and manage your automation rules from the home screen. |
-| Edit rule | Choose a trigger and actions when creating or editing an automation rule. |
-| Settings | Configure Latch preferences and manage app settings. |
+| Home | Browse automation rules, check their triggers, and toggle them on or off. |
+| Edit rule | Set a rule's trigger and configure the actions it runs. |
+| Settings | Adjust Latch preferences and configure optional Shizuku or root access. |
