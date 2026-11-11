@@ -471,20 +471,26 @@ object RuleEngine {
             }
             ActionType.HTTP_GET -> {
                 val url = action.param.trim().ifBlank { action.text.trim() }
-                if (url.startsWith("http")) {
+                if (RuleLogic.isHttpUrl(url)) {
+                    val app = context.applicationContext
                     thread {
+                        var c: java.net.HttpURLConnection? = null
                         try {
-                            val c = java.net.URL(url).openConnection() as java.net.HttpURLConnection
+                            c = java.net.URL(url).openConnection() as java.net.HttpURLConnection
                             c.connectTimeout = 8000
                             c.readTimeout = 8000
                             c.requestMethod = "GET"
                             val code = c.responseCode
-                            SettingsStore(context).appendLog("HTTP $code $url")
-                            c.disconnect()
+                            // Host only: query strings often carry tokens.
+                            SettingsStore(app).appendLog("HTTP $code ${RuleLogic.hostForLog(url)}")
                         } catch (e: Exception) {
-                            SettingsStore(context).appendLog("HTTP ERR ${e.message}")
+                            SettingsStore(app).appendLog("HTTP ERR ${RuleLogic.hostForLog(url)}: ${e.javaClass.simpleName}")
+                        } finally {
+                            c?.disconnect()
                         }
                     }
+                } else {
+                    SettingsStore(context).appendLog("HTTP skipped: not an http(s) URL")
                 }
             }
         }
