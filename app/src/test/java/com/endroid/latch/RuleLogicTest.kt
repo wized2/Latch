@@ -108,4 +108,32 @@ class RuleLogicTest {
         assertFalse(RuleLogic.cooldownOk(1, 1000L, 1999L))
         assertTrue(RuleLogic.cooldownOk(1, 1000L, 2000L))
     }
+
+    @Test fun packageNameAcceptsRealNames() {
+        assertTrue(RuleLogic.isValidPackageName("com.android.chrome"))
+        assertTrue(RuleLogic.isValidPackageName("org.example.app_2"))
+    }
+
+    @Test fun packageNameRejectsShellMetacharacters() {
+        val bad = listOf(
+            null, "", "chrome", "com.a;reboot", "com.a && id", "com.a|id", "com.a\nid",
+            "\$(id).app", "com.a`id`", "com.a b", "com.a>x", "-f.com.a", ".com.a", "com.a.",
+            "com..a", "1com.a", "a".repeat(300) + ".b",
+        )
+        for (b in bad) assertFalse("accepted: $b", RuleLogic.isValidPackageName(b))
+    }
+
+    @Test fun httpUrlOnlyHttpAndHttps() {
+        assertTrue(RuleLogic.isHttpUrl("https://example.com/hook?x=1"))
+        assertTrue(RuleLogic.isHttpUrl("http://192.168.1.5/on"))
+        assertFalse(RuleLogic.isHttpUrl("httpfoo://x"))
+        assertFalse(RuleLogic.isHttpUrl("file:///etc/passwd"))
+        assertFalse(RuleLogic.isHttpUrl("https://a b"))
+        assertFalse(RuleLogic.isHttpUrl("https://"))
+    }
+
+    @Test fun hostForLogDropsPathAndQuery() {
+        assertEquals("example.com", RuleLogic.hostForLog("https://example.com/hook?token=SECRET"))
+        assertEquals("?", RuleLogic.hostForLog("not a url"))
+    }
 }

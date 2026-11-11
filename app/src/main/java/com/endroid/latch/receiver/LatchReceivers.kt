@@ -172,6 +172,8 @@ class PluginReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         if (intent == null) return
         val app = context.applicationContext
+        // The Settings switch "Plugin API" used to only gate outgoing broadcasts.
+        if (!com.endroid.latch.data.SettingsStore(app).pluginApiEnabled) return
         when (intent.action) {
             ACTION_FIRE_TRIGGER -> {
                 val custom = intent.getStringExtra(EXTRA_TRIGGER)
@@ -182,10 +184,6 @@ class PluginReceiver : BroadcastReceiver() {
                 RuleStore(app).load().find { it.id == id && it.enabled }?.let {
                     RuleEngine.run(app, it)
                 }
-            }
-            else -> {
-                // Treat any matching action string as custom broadcast trigger param
-                intent.action?.let { RuleEngine.onCustomBroadcast(app, it) }
             }
         }
     }
