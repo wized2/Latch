@@ -59,7 +59,7 @@ Optional **Shizuku** (preferred) or root `su` for shell / `svc` style actions. E
 
 ## Privacy
 
-No `INTERNET` permission. No analytics. Rules stay on device unless you export them.
+No analytics, no accounts, no telemetry. Rules stay on device unless you export them. The `INTERNET` permission is used only by the optional **HTTP GET** action, which accepts `http://` and `https://` URLs and logs the host only (never the query string).
 
 ## Plugin API
 
@@ -67,6 +67,8 @@ No `INTERNET` permission. No analytics. Rules stay on device unless you export t
 com.endroid.latch.api.FIRE_TRIGGER   extra trigger=<string>
 com.endroid.latch.api.RUN_RULE       extra rule_id=<uuid>
 ```
+
+Any installed app can send these broadcasts, so they can be switched off in Settings (**Plugin API**). When off, Latch ignores them. Turn it off if you have rules with shell actions and do not use plugins.
 
 ## Stable vs beta
 

@@ -12,8 +12,8 @@ android {
         applicationId = "com.endroid.latch"
         minSdk = 26
         targetSdk = 35
-        versionCode = 12
-        versionName = "0.7.0"
+        versionCode = 13
+        versionName = "0.8.0"
         resourceConfigurations += listOf("en", "es", "de")
         buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
     }
