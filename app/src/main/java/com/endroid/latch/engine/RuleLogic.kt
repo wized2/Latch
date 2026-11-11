@@ -4,6 +4,29 @@ package com.endroid.latch.engine
  * Pure rule matching helpers — no Android deps so JVM unit tests can cover them.
  */
 object RuleLogic {
+    private val PACKAGE_NAME = Regex("^[A-Za-z][A-Za-z0-9_]*(\\.[A-Za-z0-9_]+)+$")
+
+    /**
+     * True only for a well-formed Android package name. Anything else must never be
+     * placed on a shell command line (force-stop builds "am force-stop <pkg>").
+     */
+    fun isValidPackageName(name: String?): Boolean =
+        name != null && name.length <= 255 && PACKAGE_NAME.matches(name)
+
+    /** Only plain http(s) URLs may be requested by the HTTP GET action. */
+    fun isHttpUrl(url: String): Boolean {
+        val u = url.trim()
+        return (u.startsWith("http://", ignoreCase = true) || u.startsWith("https://", ignoreCase = true)) &&
+            u.length > 8 && u.none { it.isWhitespace() }
+    }
+
+    /** Host only (no path/query) so secrets in a URL never reach the on-device log. */
+    fun hostForLog(url: String): String = try {
+        java.net.URI(url.trim()).host ?: "?"
+    } catch (_: Exception) {
+        "?"
+    }
+
     fun batteryBelow(percent: Int, threshold: Int): Boolean = percent <= threshold
     fun batteryAbove(percent: Int, threshold: Int): Boolean = percent >= threshold
 

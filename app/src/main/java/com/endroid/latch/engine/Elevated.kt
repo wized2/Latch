@@ -3,8 +3,6 @@ package com.endroid.latch.engine
 import android.content.pm.PackageManager
 import android.util.Log
 import rikka.shizuku.Shizuku
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import java.lang.reflect.Method
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
@@ -13,13 +11,22 @@ object Elevated {
     private const val TAG = "LatchElevated"
     private val newProcessMethod = AtomicReference<Method?>()
 
-    fun hasSu(): Boolean = try {
-        val p = Runtime.getRuntime().exec(arrayOf("su", "-c", "echo ok"))
-        val out = BufferedReader(InputStreamReader(p.inputStream)).readLine()
-        p.waitFor(3, TimeUnit.SECONDS)
-        out?.contains("ok") == true
-    } catch (_: Exception) {
-        false
+    @Volatile private var suCache: Pair<Boolean, Long>? = null
+    private const val SU_CACHE_MS = 30_000L
+
+    /** su probe with a hard timeout (a su that waits for a prompt used to hang the caller). */
+    fun hasSu(): Boolean {
+        val now = System.currentTimeMillis()
+        suCache?.let { (ok, at) -> if (now - at < SU_CACHE_MS) return ok }
+        val ok = try {
+            val p = Runtime.getRuntime().exec(arrayOf("su", "-c", "echo ok"))
+            val r = drain(p, 3)
+            r.first == 0 && r.second.contains("ok")
+        } catch (_: Exception) {
+            false
+        }
+        suCache = ok to now
+        return ok
     }
 
     fun shizukuAvailable(): Boolean = try {
@@ -91,20 +98,35 @@ object Elevated {
         }
     }
 
+    /**
+     * Reads output on a helper thread so [timeoutSec] is real: the old version read the
+     * stream to EOF first, so a hung process blocked the caller forever.
+     */
     private fun drain(p: Process, timeoutSec: Long): Pair<Int, String> {
-        val out = StringBuilder()
-        try {
-            p.inputStream.bufferedReader().use { out.append(it.readText()) }
-        } catch (_: Exception) { }
-        val ok = try {
+        val out = StringBuffer()
+        val reader = Thread {
+            try {
+                p.inputStream.bufferedReader().use { r ->
+                    val buf = CharArray(1024)
+                    while (true) {
+                        val n = r.read(buf)
+                        if (n < 0) break
+                        if (out.length < 4000) out.append(buf, 0, n)
+                    }
+                }
+            } catch (_: Exception) { }
+        }.apply { isDaemon = true; start() }
+        val finished = try {
             p.waitFor(timeoutSec, TimeUnit.SECONDS)
-        } catch (_: Exception) {
+        } catch (_: InterruptedException) {
             false
         }
-        if (!ok) {
-            p.destroy()
+        if (!finished) {
+            p.destroyForcibly()
+            reader.join(500)
             return -1 to out.toString().take(4000)
         }
+        reader.join(1000)
         return p.exitValue() to out.toString().take(4000)
     }
 
@@ -152,6 +174,9 @@ object Elevated {
     fun setMobileData(enable: Boolean, preferShizuku: Boolean, allowSu: Boolean) =
         runShell(if (enable) "svc data enable" else "svc data disable", preferShizuku, allowSu)
 
-    fun forceStop(packageName: String, preferShizuku: Boolean, allowSu: Boolean) =
-        runShell("am force-stop ${packageName.trim()}", preferShizuku, allowSu)
+    fun forceStop(packageName: String, preferShizuku: Boolean, allowSu: Boolean): Pair<Int, String> {
+        val pkg = packageName.trim()
+        if (!RuleLogic.isValidPackageName(pkg)) return -1 to "invalid package name"
+        return runShell("am force-stop $pkg", preferShizuku, allowSu)
+    }
 }
