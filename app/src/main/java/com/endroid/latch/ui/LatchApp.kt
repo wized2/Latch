@@ -929,7 +929,7 @@ private fun SettingsScreen(
                     value = importText,
                     onValueChange = { importText = it },
                     modifier = Modifier.fillMaxWidth().height(200.dp),
-                    placeholder = { Text("Paste rules array…") },
+                    placeholder = { Text("Paste rules array or recipe JSON…") },
                 )
             },
             confirmButton = {
