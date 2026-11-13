@@ -22,6 +22,7 @@ Import JSON from the `recipes/` folder in **Settings → Import**, or copy a fil
 | --- | --- | --- |
 | `night_dnd.json` | Time window | Ringer silent |
 | `sleep_focus.json` | Time window | Vibrate + DND |
+| `bedtime_winddown.json` | Daily at 22:30 | Brightness 25% + ringer vibrate |
 
 ## Tips
 - Triggers and actions must match names in `TriggerType` / `ActionType` (`Models.kt`).
@@ -32,3 +33,4 @@ Import JSON from the `recipes/` folder in **Settings → Import**, or copy a fil
 | Recipe | Trigger | Actions |
 | --- | --- | --- |
 | `bluetooth_connected_toast.json` | `BLUETOOTH_CONNECTED` | Toast |
+| `commute_bluetooth_music.json` | `BLUETOOTH_CONNECTED` | Media volume 80% + open music app |

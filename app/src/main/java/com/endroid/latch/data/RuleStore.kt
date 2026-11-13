@@ -63,10 +63,7 @@ class RuleStore(private val context: Context) {
     }
 
     fun importJson(text: String, replace: Boolean = false): Int {
-        val arr = JSONArray(text)
-        val incoming = buildList {
-            for (i in 0 until arr.length()) add(Rule.fromJson(arr.getJSONObject(i)))
-        }
+        val incoming = RuleJson.parseList(text)
         if (replace) {
             save(incoming)
             return incoming.size

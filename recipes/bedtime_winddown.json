@@ -1,0 +1,23 @@
+{
+  "rules": [
+    {
+      "id": "recipe-bedtime-winddown",
+      "name": "Bedtime wind-down",
+      "enabled": true,
+      "trigger": "TIME_DAILY",
+      "triggerValue": 22,
+      "triggerValue2": 30,
+      "triggerParam": "",
+      "condition": "NONE",
+      "conditionValue": 0,
+      "cooldownSec": 3600,
+      "notes": "Recipe: dim the screen and switch the ringer to vibrate at 22:30. Edit the time as needed. Brightness needs Modify system settings.",
+      "tag": "recipe",
+      "profileId": "default",
+      "actions": [
+        {"type": "SET_BRIGHTNESS", "text": "", "title": "", "ringerMode": "NORMAL", "param": "25"},
+        {"type": "RINGER_MODE", "text": "", "title": "", "ringerMode": "VIBRATE", "param": ""}
+      ]
+    }
+  ]
+}
