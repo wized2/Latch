@@ -1,5 +1,10 @@
 ## Unreleased
 
+### Editor
+- Day-of-week rules use day chips and a time field instead of a raw bitmask number
+- Changing a rule's trigger resets its fields, so a battery value can no longer turn into a day mask that fires at midnight
+- Time-window rules validate the end time before they can be saved
+
 ### Fixes
 - The **Media mounted** trigger now actually fires (its broadcast was never registered)
 - Rule cards show readable schedules: "Weekdays at 07:30" instead of "Day mask 62", and time windows show their end time

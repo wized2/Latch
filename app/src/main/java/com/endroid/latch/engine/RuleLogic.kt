@@ -77,6 +77,9 @@ object RuleLogic {
         return (mask and bit) != 0
     }
 
+    /** True for a 24-hour "H:MM" or "HH:MM" clock string. */
+    fun isClockTime(s: String): Boolean = Regex("([01]?[0-9]|2[0-3]):[0-5][0-9]").matches(s.trim())
+
     /** Human label for a day mask (Calendar SUNDAY=bit 0 … SATURDAY=bit 6). */
     fun dayNames(mask: Int): String {
         val m = mask and 0x7F
