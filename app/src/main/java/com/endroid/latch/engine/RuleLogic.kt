@@ -77,6 +77,22 @@ object RuleLogic {
         return (mask and bit) != 0
     }
 
+    /** Human label for a day mask (Calendar SUNDAY=bit 0 … SATURDAY=bit 6). */
+    fun dayNames(mask: Int): String {
+        val m = mask and 0x7F
+        val weekdays = 0b0111110 // Mon..Fri
+        val weekend = 0b1000001 // Sun, Sat
+        return when (m) {
+            0 -> "No days"
+            0x7F -> "Every day"
+            weekdays -> "Weekdays"
+            weekend -> "Weekends"
+            else -> listOf(1 to "Mon", 2 to "Tue", 3 to "Wed", 4 to "Thu", 5 to "Fri", 6 to "Sat", 0 to "Sun")
+                .filter { (m shr it.first) and 1 == 1 }
+                .joinToString(", ") { it.second }
+        }
+    }
+
     fun clampPercent(v: Int): Int = v.coerceIn(0, 100)
     fun brightnessRaw(percent: Int): Int {
         val p = clampPercent(percent)

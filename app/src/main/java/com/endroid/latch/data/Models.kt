@@ -143,8 +143,9 @@ data class Rule(
             TriggerType.AIRPLANE_ON -> "Airplane on"
             TriggerType.AIRPLANE_OFF -> "Airplane off"
             TriggerType.MEDIA_MOUNTED -> "Media mounted"
-            TriggerType.TIME_WINDOW -> "Window %02d:%02d".format(triggerValue, triggerValue2)
-            TriggerType.DAY_OF_WEEK -> "Day mask $triggerValue"
+            TriggerType.TIME_WINDOW -> "Window %02d:%02d–%s".format(triggerValue, triggerValue2, triggerParam.ifBlank { "?" })
+            TriggerType.DAY_OF_WEEK -> com.endroid.latch.engine.RuleLogic.dayNames(triggerValue) +
+                if (triggerValue2 >= 0) " at %02d:%02d".format(triggerValue2 / 60, triggerValue2 % 60) else ""
             TriggerType.USER_PRESENT -> "User unlocked"
             TriggerType.POWER_SAVE_ON -> "Battery saver on"
             TriggerType.POWER_SAVE_OFF -> "Battery saver off"

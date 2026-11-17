@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixes
+- The **Media mounted** trigger now actually fires (its broadcast was never registered)
+- Rule cards show readable schedules: "Weekdays at 07:30" instead of "Day mask 62", and time windows show their end time
+
 ## 0.8.0
 
 ### Security
