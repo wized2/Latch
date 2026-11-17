@@ -144,4 +144,14 @@ class RuleLogicTest {
         assertEquals("Mon, Wed", RuleLogic.dayNames(0b0001010))
         assertEquals("No days", RuleLogic.dayNames(0))
     }
+
+    @Test fun clockTimeValidation() {
+        assertTrue(RuleLogic.isClockTime("06:30"))
+        assertTrue(RuleLogic.isClockTime("6:05"))
+        assertTrue(RuleLogic.isClockTime("23:59"))
+        assertFalse(RuleLogic.isClockTime("24:00"))
+        assertFalse(RuleLogic.isClockTime("12:60"))
+        assertFalse(RuleLogic.isClockTime("noon"))
+        assertFalse(RuleLogic.isClockTime(""))
+    }
 }

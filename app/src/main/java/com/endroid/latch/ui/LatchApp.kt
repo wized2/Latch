@@ -82,6 +82,7 @@ import com.endroid.latch.data.ThemeMode
 import com.endroid.latch.data.ProfileStore
 import com.endroid.latch.data.Profile
 import com.endroid.latch.data.TriggerType
+import com.endroid.latch.engine.RuleLogic
 import com.endroid.latch.engine.AppWatchService
 import com.endroid.latch.engine.Elevated
 import com.endroid.latch.engine.PermissionStatus
@@ -347,7 +348,7 @@ private fun RuleCard(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 private fun EditRuleScreen(initial: Rule?, onBack: () -> Unit, onSave: (Rule) -> Unit) {
     var name by remember { mutableStateOf(initial?.name ?: "") }
@@ -386,7 +387,22 @@ private fun EditRuleScreen(initial: Rule?, onBack: () -> Unit, onSave: (Rule) ->
         ) {
             OutlinedTextField(name, { name = it }, label = { Text("Name") },
                 modifier = Modifier.fillMaxWidth(), singleLine = true)
-            EnumDropdown("When", TriggerType.entries, trigger) { trigger = it }
+            EnumDropdown("When", TriggerType.entries, trigger) { picked ->
+                if (picked != trigger) {
+                    trigger = picked
+                    // Reset the trigger fields so values typed for another trigger do not leak
+                    // (e.g. a battery 20 becoming a day mask that fires at midnight).
+                    triggerParam = ""
+                    when (picked) {
+                        TriggerType.BATTERY_BELOW -> { value = 20; value2 = 0 }
+                        TriggerType.BATTERY_ABOVE -> { value = 80; value2 = 0 }
+                        TriggerType.TIME_DAILY -> { value = 8; value2 = 0 }
+                        TriggerType.TIME_WINDOW -> { value = 22; value2 = 0; triggerParam = "06:00" }
+                        TriggerType.DAY_OF_WEEK -> { value = 0b0111110; value2 = 8 * 60 }
+                        else -> { value = 0; value2 = 0 }
+                    }
+                }
+            }
             when (trigger) {
                 TriggerType.BATTERY_BELOW, TriggerType.BATTERY_ABOVE -> {
                     Text("Battery threshold: $value%", style = MaterialTheme.typography.labelLarge)
@@ -408,6 +424,8 @@ private fun EditRuleScreen(initial: Rule?, onBack: () -> Unit, onSave: (Rule) ->
                     }
                     OutlinedTextField(triggerParam, { triggerParam = it },
                         label = { Text("End HH:MM") }, placeholder = { Text("22:00") },
+                        isError = !RuleLogic.isClockTime(triggerParam),
+                        supportingText = { if (!RuleLogic.isClockTime(triggerParam)) Text("Use 24-hour time, e.g. 06:30") },
                         modifier = Modifier.fillMaxWidth(), singleLine = true)
                 }
                 TriggerType.WIFI_SSID -> {
@@ -441,8 +459,32 @@ private fun EditRuleScreen(initial: Rule?, onBack: () -> Unit, onSave: (Rule) ->
                                 })
                         },
                         modifier = Modifier.fillMaxWidth(), singleLine = true)
-                TriggerType.DAY_OF_WEEK ->
-                    IntField("Day bitmask (Sun=1 …)", value) { value = it }
+                TriggerType.DAY_OF_WEEK -> {
+                    Text("Days: ${RuleLogic.dayNames(value)}", style = MaterialTheme.typography.labelLarge)
+                    FlowRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    ) {
+                        // Calendar bit order: Sun = bit 0 … Sat = bit 6; shown Monday first.
+                        listOf(1 to "Mon", 2 to "Tue", 3 to "Wed", 4 to "Thu", 5 to "Fri", 6 to "Sat", 0 to "Sun")
+                            .forEach { (bit, label) ->
+                                val on = (value shr bit) and 1 == 1
+                                FilterChip(
+                                    selected = on,
+                                    onClick = { value = value xor (1 shl bit) },
+                                    label = { Text(label) },
+                                )
+                            }
+                    }
+                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                        IntField("Hour", (value2.coerceAtLeast(0)) / 60, Modifier.weight(1f)) {
+                            value2 = it.coerceIn(0, 23) * 60 + value2.coerceAtLeast(0) % 60
+                        }
+                        IntField("Minute", (value2.coerceAtLeast(0)) % 60, Modifier.weight(1f)) {
+                            value2 = value2.coerceAtLeast(0) / 60 * 60 + it.coerceIn(0, 59)
+                        }
+                    }
+                }
                 else -> Unit
             }
 
@@ -491,6 +533,7 @@ private fun EditRuleScreen(initial: Rule?, onBack: () -> Unit, onSave: (Rule) ->
                         ),
                     )
                 },
+                enabled = trigger != TriggerType.TIME_WINDOW || RuleLogic.isClockTime(triggerParam),
                 modifier = Modifier.fillMaxWidth(),
             ) { Text("Save rule") }
         }
