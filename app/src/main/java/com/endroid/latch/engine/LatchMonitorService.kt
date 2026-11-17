@@ -140,6 +140,8 @@ class LatchMonitorService : Service() {
                 addDataScheme("package")
             }
             ContextCompat.registerReceiver(this, systemEvents, pkgFilter, ContextCompat.RECEIVER_NOT_EXPORTED)
+            val mediaFilter = IntentFilter(Intent.ACTION_MEDIA_MOUNTED).apply { addDataScheme("file") }
+            ContextCompat.registerReceiver(this, connectivity, mediaFilter, ContextCompat.RECEIVER_NOT_EXPORTED)
             registered = true
         } catch (_: Exception) {
             registered = false

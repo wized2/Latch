@@ -136,4 +136,12 @@ class RuleLogicTest {
         assertEquals("example.com", RuleLogic.hostForLog("https://example.com/hook?token=SECRET"))
         assertEquals("?", RuleLogic.hostForLog("not a url"))
     }
+
+    @Test fun dayNamesLabels() {
+        assertEquals("Every day", RuleLogic.dayNames(0x7F))
+        assertEquals("Weekdays", RuleLogic.dayNames(0b0111110))
+        assertEquals("Weekends", RuleLogic.dayNames(0b1000001))
+        assertEquals("Mon, Wed", RuleLogic.dayNames(0b0001010))
+        assertEquals("No days", RuleLogic.dayNames(0))
+    }
 }
