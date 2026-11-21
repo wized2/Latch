@@ -3,4 +3,16 @@
     <string name="app_name">Latch</string>
     <string name="channel_actions">Acciones de Latch</string>
     <string name="channel_actions_desc">Notificaciones de reglas de automatización</string>
+    <string name="app_watch_title">Vigilancia de apps de Latch</string>
+    <string name="app_watch_text">Vigilando las apps en primer plano para tus reglas</string>
+    <string name="widget_label">Interruptor de regla de Latch</string>
+    <string name="widget_pick">Toca para configurar</string>
+    <string name="widget_on">ACTIVADA — toca para desactivar</string>
+    <string name="widget_off">DESACTIVADA — toca para activar</string>
+    <string name="monitor_title">Latch está activo</string>
+    <string name="monitor_text">Vigilando la batería, la red y otros disparadores</string>
+    <string name="monitor_channel">Monitor de Latch</string>
+    <string name="monitor_channel_desc">Mantiene la automatización funcionando en segundo plano</string>
+    <string name="accessibility_service_description">Latch usa la accesibilidad solo para detectar cuándo una app pasa a primer plano, para las reglas APP_OPENED. No se lee ni se guarda ningún contenido de la pantalla.</string>
+    <string name="accessibility_service_label">Disparadores de apps de Latch</string>
 </resources>
